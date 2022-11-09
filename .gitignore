@@ -1,0 +1,13 @@
+# MacOS stuff.
+.DS_Store
+
+# GoLand IDE
+.idea/
+.fleet/
+
+# vscode
+.vscode/
+
+# goreleaser
+dist/
+
