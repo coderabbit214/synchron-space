@@ -31,11 +31,15 @@ func main() {
 					} else if event.Has(fsnotify.Create) {
 						log.Println("文件/文件夹创建", event.Op, event.Name)
 					} else if event.Has(fsnotify.Rename) {
-						log.Println("文件/文件夹重命名前", event.Op, event.Name)
+						if event.Has(fsnotify.Remove) {
+							log.Println("文件夹删除/重命名前", event.Op, event.Name)
+						} else {
+							log.Println("文件删除/重命名前", event.Op, event.Name)
+						}
 					} else if event.Has(fsnotify.Remove) {
-						log.Println("文件/文件夹删除", event.Op, event.Name)
+						log.Println("文件删除", event.Op, event.Name)
 					} else {
-						log.Println("查看操作", event.Op, event.Name)
+						//log.Println("查看操作", event.Op, event.Name)
 					}
 				}
 			case err, ok := <-watcher.Errors:
@@ -47,7 +51,7 @@ func main() {
 		}
 	}()
 	// Add a path.
-	err = watcher.Add("/Users/Mr_J/Downloads")
+	err = watcher.Add("/Users/mr_j/Downloads")
 	if err != nil {
 		log.Fatal(err)
 	}
