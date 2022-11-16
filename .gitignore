@@ -11,3 +11,4 @@
 # goreleaser
 dist/
 
+conf/
