@@ -5,10 +5,7 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"gopkg.in/yaml.v2"
 	"os"
-	"synchron-space/model/file"
 )
-
-var ossService = OssService{}
 
 type (
 	OssService struct {
@@ -28,16 +25,8 @@ type (
 	}
 )
 
-// GetService 获取服务
-func GetService() file.Service {
-	if ossService.Client == nil {
-		newService()
-	}
-	return ossService
-}
-
-// 创建连接
-func newService() {
+// NewService 创建连接
+func NewService() (ossService OssService, err error) {
 	var config Config
 	yamlFile, err := os.ReadFile("/Users/Mr_J/Desktop/synchron-space/conf/conf.yaml")
 	if err != nil {
@@ -57,12 +46,23 @@ func newService() {
 	ossService.Client = client
 	ossService.BucketName = ossConfig.BucketName
 	ossService.Path = ossConfig.Path
+	return ossService, err
 }
 
-func (s OssService) Upload(filePath string) bool {
+func (s OssService) Upload(filePath string, objectName string) error {
 	//文件判断
-
-	return false
+	bucket, err := s.Client.Bucket(s.BucketName)
+	if err != nil {
+		fmt.Println("s.Client.Bucket err:", err)
+		return err
+	}
+	fmt.Println("oss:", s.Path+objectName, filePath)
+	err = bucket.PutObjectFromFile(s.Path+objectName, filePath)
+	if err != nil {
+		fmt.Println("bucket.PutObjectFromFile err:", err)
+		return err
+	}
+	return err
 }
 
 func (s OssService) Download() {

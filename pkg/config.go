@@ -23,4 +23,5 @@ func init() {
 
 type Config struct {
 	WatcherPath string `yaml:"watcher-path"`
+	Server      string `yaml:"server"`
 }
